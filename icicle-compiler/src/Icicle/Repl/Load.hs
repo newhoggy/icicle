@@ -26,6 +26,7 @@ import           Icicle.Repl.Source
 import qualified Icicle.Runtime.Serial.Zebra as Runtime
 import qualified Icicle.Storage.Dictionary.Toml as Toml
 import qualified Icicle.Storage.Dictionary.Sorbet as Sorbet
+import qualified Icicle.Source.Query as Query
 
 import           P
 
@@ -139,7 +140,11 @@ loadFunctionsFrom path src = do
    Left err ->
      putPretty err
 
-   Right functions0 -> do
+   Right module0 -> do
+     let
+       functions0 =
+         Query.resolvedEntries module0
+
      liftIO . IO.putStrLn $
        "Loaded " <> show (length functions0) <> " functions from " <> path
 

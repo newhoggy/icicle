@@ -10,6 +10,11 @@ import qualified System.Exit    as System
 import qualified System.IO      as System
 import           System.IO      (IO, FilePath)
 
+import qualified Icicle.Sorbet.Position as Sorbet
+import qualified Icicle.Source.Parser as Query
+import qualified Icicle.Source.Query as Query
+import qualified Icicle.Dictionary as Dictionary
+
 import P
 
 -- | Language server plugin state.
@@ -19,7 +24,7 @@ data State
         , stateLogDebug         :: Maybe (FilePath, System.Handle)
 
           -- | Checked core files.
-        , stateCoreChecked      :: IORef (Map FilePath (Maybe ())) }
+        , stateCoreChecked      :: IORef (Map FilePath [Dictionary.DictionaryFunction]) }
 
 
 -- | Phase of the LSP server protocol.
