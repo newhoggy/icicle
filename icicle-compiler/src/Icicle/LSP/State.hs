@@ -10,10 +10,8 @@ import qualified System.Exit    as System
 import qualified System.IO      as System
 import           System.IO      (IO, FilePath)
 
-import qualified Icicle.Sorbet.Position as Sorbet
-import qualified Icicle.Source.Parser as Query
-import qualified Icicle.Source.Query as Query
 import qualified Icicle.Dictionary as Dictionary
+import qualified Icicle.Source.Query as Query
 
 import P
 
@@ -24,7 +22,7 @@ data State
         , stateLogDebug         :: Maybe (FilePath, System.Handle)
 
           -- | Checked core files.
-        , stateCoreChecked      :: IORef (Map FilePath [Dictionary.DictionaryFunction]) }
+        , stateCoreChecked      :: IORef (Map Query.ModuleName [Dictionary.DictionaryFunction]) }
 
 
 -- | Phase of the LSP server protocol.

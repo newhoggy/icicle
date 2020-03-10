@@ -166,8 +166,8 @@ checkKey :: CheckOptions
          -> Exp Sorbet.Position P.Var
          -> Either DictionaryImportError (InputKey AnnotSource P.Var)
 checkKey checkOpts d iid xx = do
-  let l = Sorbet.Position "dummy_pos_ctx"  0 0
-  let p = Sorbet.Position "dummy_pos_final"  0 0
+  let l = Sorbet.Position "dummy_pos_ctx"  1 1
+  let p = Sorbet.Position "dummy_pos_final"  1 1
   let q = QueryTop (QualifiedInput iid) [outputid|dummy_namespace:dummy_output|]
           -- We know the key must be of Pure or Element temporality,
           -- so it's ok to wrap it in a Group.

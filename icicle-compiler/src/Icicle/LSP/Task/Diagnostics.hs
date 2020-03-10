@@ -71,16 +71,17 @@ updateDiagnostics' state sUri sSource = do
 
 collectOrAdd :: FilePath -> State -> Query.ModuleImport Position -> EitherT (Compiler.ErrorSource Variable) IO [Dictionary.DictionaryFunction]
 collectOrAdd rootDir state mi = do
-  known <- liftIO (readIORef (stateCoreChecked state))
-  fname <- firstEitherT Compiler.ErrorSourceModuleError $ getModuleFileName rootDir mi
   let
-    fullPath =
-      rootDir </> fname
-  case Map.lookup fname known of
+    name =
+      Query.importName mi
+
+  known <- liftIO (readIORef (stateCoreChecked state))
+
+  case Map.lookup name known of
     Just x  -> return x
     Nothing -> do
-      envFor <- snd <$> Compiler.readIcicleModule (Text.pack fullPath)
-      liftIO  $ modifyIORef (stateCoreChecked state) (Map.insert fname envFor)
+      envFor <- snd <$> Compiler.readIcicleModule rootDir name
+      liftIO  $ modifyIORef (stateCoreChecked state) (Map.insert name envFor)
       return envFor
 
 
@@ -112,7 +113,7 @@ errorVector err =
       Vector.singleton (packError ("Desugar", show (pretty err), Desugar.annotOfError de))
     Compiler.ErrorSourceCheck ce ->
       Vector.singleton (packError ("Check", show (pretty err), Check.annotOfError ce))
-    Compiler.ErrorSourceModuleError (Query.Whoops a fp) ->
+    Compiler.ErrorSourceModuleError (Query.ModuleNotFound a fp) ->
       Vector.singleton (packError ("Module", "Couldn't find " <> fp, a))
 
 

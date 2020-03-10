@@ -97,7 +97,7 @@ builtinFunctions :: [DictionaryFunction]
 builtinFunctions
   = snd
   $ Fresh.runFresh
-    (SQ.builtinDefinitions (Position "builtin" 0 0))
+    (SQ.builtinDefinitions (Position "builtin" 1 1))
     (Fresh.counterPrefixNameState (fromString . show) "builtin")
 
 

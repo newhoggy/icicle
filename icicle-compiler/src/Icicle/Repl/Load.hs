@@ -136,7 +136,13 @@ loadFunctions path = do
 
 loadFunctionsFrom :: FilePath -> Text -> Repl ()
 loadFunctionsFrom path src = do
-  case Source.readIcicleLibrary "<interactive>" path src of
+  let
+    rootDir
+      = FilePath.takeDirectory path
+  ret <- liftIO . runEitherT $
+    Source.readIcicleLibrary rootDir path src
+
+  case ret of
    Left err ->
      putPretty err
 

@@ -58,7 +58,7 @@ type Var = Variable
 
 pModule :: Parser s m => m (Module Position Var)
 pModule = do
-  name    <- pModuleName <|> pure "Main"
+  name    <- pModuleName <|> pure (ModuleName "Default")
   _       <- pToken Tok_LBrace
   imports <- pImport `Mega.sepEndBy` pToken Tok_Semi
   decls   <- pDecl   `Mega.sepEndBy` pToken Tok_Semi
@@ -70,16 +70,16 @@ pModule = do
 pImport :: Parser s m => m (ModuleImport Position)
 pImport = do
   _      <- pToken Tok_Import
-  (p, s) <- pString <|> pConstructorText
-  return (ModuleImport p s)
+  (p, s) <- pConstructorText
+  return (ModuleImport p (ModuleName s))
 
 
-pModuleName :: Parser s m => m Text
+pModuleName :: Parser s m => m ModuleName
 pModuleName = do
   _ <- pToken Tok_Module
   n <- pConstructorText
   _ <- pToken Tok_Where
-  return (snd n)
+  return (ModuleName (snd n))
 
 
 pConstructorText :: Parser s m => m (Position, Text)
